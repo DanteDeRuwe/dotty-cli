@@ -14,12 +14,14 @@ jobs:
     needs: build  # Ensure the build job completes first
 
     steps:
+      - name: .NET Publish
+        run: dotnet publish -c Release -o ./output
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          name: Release ${{ github.ref }}
           draft: false
           prerelease: false
         env:
@@ -28,7 +30,6 @@ jobs:
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v1
         with:
-          upload-artifact: ./output/YourConsoleApp
-          tag: ${{ github.ref }}
+          files: ./output/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
