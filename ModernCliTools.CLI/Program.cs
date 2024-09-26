@@ -1,4 +1,5 @@
-﻿using Cocona;
+﻿using CliWrap;
+using Cocona;
 using Spectre.Console;
 
 var builder = CoconaApp.CreateBuilder();
@@ -9,13 +10,14 @@ app.AddCommand("greet", ([Argument] string subject) => Panel($"Hello, {subject}!
 app.AddSubCommand("introduce", group =>
 {
     group.AddCommand("talk", () => Panel("Welcome to this talk on crafting modern CLI tools using .NET"));
-    group.AddCommand("speaker", ([Option] string? name = null) =>
+    group.AddCommand("speaker", ([Option('n')] string? name = null) =>
     {
         name ??= Select("Select a speaker", "Dante De Ruwe", "Some other guy...");
 
         if (!name.Equals("Dante De Ruwe"))
         {
-            return Error("Speaker not found.");
+            Error("Speaker not found.");
+            return 1;
         }
 
         Panel($"""
@@ -27,21 +29,34 @@ app.AddSubCommand("introduce", group =>
     });
 });
 
+app.AddSubCommand("present", group =>
+{
+    group.AddCommand("slides", async () =>
+    {
+        //open google slides and put in slideshow mode
+        var edgePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
+            "Microsoft", "Edge", "Application", "msedge.exe"
+        );
+
+        await Cli
+            .Wrap(edgePath)
+            .WithArguments([
+                "https://docs.google.com/presentation/d/1WABgifl2J70RuZjVP8MJkAf4k5TWAohhuNUtBViE5Fs/present",
+                "--new-window",
+                "--start-fullscreen"
+            ])
+            .ExecuteAsync();
+    });
+});
+
 
 app.Run();
 return;
 
-int Panel(string message)
-{
-    AnsiConsole.Write(new Panel(message) { Border = BoxBorder.Rounded });
-    return 0;
-}
+void Panel(string message) => AnsiConsole.Write(new Panel(message) { Border = BoxBorder.Rounded });
 
-int Error(string message)
-{
-    AnsiConsole.MarkupLine($"?? [bold red]Error:[/] {message}");
-    return 1;
-}
+void Error(string message) => AnsiConsole.MarkupLine($":police_car_light: [bold red]Error:[/] {message}");
 
 T Select<T>(string title, params IEnumerable<T> choices) where T : notnull
 {
