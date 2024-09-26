@@ -1,0 +1,34 @@
+name: Publish .NET Console App
+
+on:
+  push:
+    tags:
+      - 'v*'  # This triggers the action on new version tags
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml  # Call the reusable build workflow
+
+  release:
+    runs-on: ubuntu-latest
+    needs: build  # Ensure the build job completes first
+
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        with:
+          upload-artifact: ./output/YourConsoleApp
+          tag: ${{ github.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
