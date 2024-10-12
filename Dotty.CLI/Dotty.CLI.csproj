@@ -19,10 +19,13 @@
     <PropertyGroup>
         <PackageId>dotty</PackageId>
         <Authors>Dante De Ruwe</Authors>
-        <Description>A modern dotnet CLI tool</Description>
+        <Description>A proof-of-concept tool for my talk about "Crafting modern CLI tools using .NET"</Description>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Copyright>Copyright 2024 (c) Dante De Ruwe. All rights reserved.</Copyright>
         <PackageTags>dotnet cli tool dotnet-tool</PackageTags>
+        <RepositoryUrl>https://github.com/DanteDeRuwe/dotty-cli</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://dantederuwe.com/talks/cli-tools-dotnet</PackageProjectUrl>
     </PropertyGroup>
 
     <!-- Code -->
