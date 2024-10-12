@@ -28,12 +28,3 @@ jobs:
     
       - name: Test project
         run: dotnet test --configuration Release --no-build --no-restore
-    
-      - name: Publish build artifacts
-        run: dotnet publish --configuration Release --output ./artifacts
-    
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifacts
-          path: ./artifacts
