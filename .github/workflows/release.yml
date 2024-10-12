@@ -6,12 +6,9 @@ on:
       - 'v*'  # This triggers the action on new version tags
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml  # Call the reusable build workflow
-
   release:
+    uses: ./.github/workflows/build.yml
     runs-on: ubuntu-latest
-    needs: build  # Ensure the build job completes first
 
     steps:
        
