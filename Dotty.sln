@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModernCliTools.CLI", "ModernCliTools.CLI\ModernCliTools.CLI.csproj", "{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotty.CLI", "Dotty.CLI\Dotty.CLI.csproj", "{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{1EAF65FE-E5FC-408A-BC37-868C03667A76}"
 	ProjectSection(SolutionItems) = preProject

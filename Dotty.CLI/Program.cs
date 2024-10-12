@@ -1,8 +1,13 @@
 ﻿using CliWrap;
 using Cocona;
+using Cocona.Application;
+using Microsoft.Extensions.DependencyInjection;
 using Spectre.Console;
 
 var builder = CoconaApp.CreateBuilder();
+
+builder.Services.AddSingleton<ICoconaApplicationMetadataProvider>(_ => new CustomMetadataProvider(new CoconaApplicationMetadataProvider()));
+
 var app = builder.Build();
 
 app.AddCommand("greet", ([Argument] string subject) => Panel($"Hello, {subject}!"));
@@ -61,4 +66,12 @@ void Error(string message) => AnsiConsole.MarkupLine($":police_car_light: [bold 
 T Select<T>(string title, params IEnumerable<T> choices) where T : notnull
 {
     return AnsiConsole.Prompt(new SelectionPrompt<T>().Title(title).AddChoices(choices));
+}
+
+public class CustomMetadataProvider(ICoconaApplicationMetadataProvider inner) : ICoconaApplicationMetadataProvider
+{
+    public string GetProductName() => "dotty";
+    public string GetExecutableName() => "dotty";
+    public string GetVersion() => $"v{inner.GetVersion()}";
+    public string GetDescription() => inner.GetDescription();
 }

@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>dotty</ToolCommandName>
+        <AssemblyName>Dotty</AssemblyName>
+    </PropertyGroup>
+
+    <!-- Versioning -->
+    <PropertyGroup>
+        <Version>$(Version)</Version>
+        <PackageVersion>$(Version)</PackageVersion>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    </PropertyGroup>
+    
+    <!-- NuGet Metadata -->
+    <PropertyGroup>
+        <PackageId>dotty</PackageId>
+        <Authors>Dante De Ruwe</Authors>
+        <Description>A modern dotnet CLI tool</Description>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <Copyright>Copyright 2024 (c) Dante De Ruwe. All rights reserved.</Copyright>
+        <PackageTags>dotnet cli tool dotnet-tool</PackageTags>
+    </PropertyGroup>
+
+    <!-- Code -->
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <WarningsAsErrors>true</WarningsAsErrors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CliWrap" Version="3.6.6"/>
+        <PackageReference Include="Cocona" Version="2.2.0"/>
+        <PackageReference Include="Spectre.Console" Version="0.49.1"/>
+    </ItemGroup>
+
+</Project>
