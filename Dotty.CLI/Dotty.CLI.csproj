@@ -14,7 +14,7 @@
         <PackageVersion>$(Version)</PackageVersion>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
-    
+
     <!-- NuGet Metadata -->
     <PropertyGroup>
         <PackageId>dotty</PackageId>
@@ -34,6 +34,11 @@
         <Nullable>enable</Nullable>
         <WarningsAsErrors>true</WarningsAsErrors>
     </PropertyGroup>
+
+    <!-- Make sure the top-level README.md file is included in the package -->
+    <ItemGroup>
+        <None Include="../README.md" Pack="true" PackagePath="/"/>
+    </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="CliWrap" Version="3.6.6"/>
