@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotty.CLI", "Dotty.CLI\Dotty.CLI.csproj", "{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotty.CLI", "src\Dotty.CLI\Dotty.CLI.csproj", "{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{1EAF65FE-E5FC-408A-BC37-868C03667A76}"
 	ProjectSection(SolutionItems) = preProject
@@ -9,6 +9,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{
 		README.md = README.md
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AE5D96E8-180C-4E9A-99D3-B709B0517EAF}"
+EndProject
+'
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dotty.CLI.IntegrationTest", "test\Dotty.CLI.IntegrationTest\Dotty.CLI.IntegrationTest.csproj", "{794E14E8-E350-427E-9AC5-A09DF53239A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{16C94B47-B0AC-465F-AF52-8834503D8B3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,5 +27,13 @@ Global
 		{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{794E14E8-E350-427E-9AC5-A09DF53239A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{794E14E8-E350-427E-9AC5-A09DF53239A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{794E14E8-E350-427E-9AC5-A09DF53239A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{794E14E8-E350-427E-9AC5-A09DF53239A9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{794E14E8-E350-427E-9AC5-A09DF53239A9} = {AE5D96E8-180C-4E9A-99D3-B709B0517EAF}
+		{7A43ABC4-DEA2-4EF1-969D-A6362CB221C7} = {16C94B47-B0AC-465F-AF52-8834503D8B3E}
 	EndGlobalSection
 EndGlobal

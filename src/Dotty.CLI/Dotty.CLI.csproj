@@ -37,7 +37,7 @@
 
     <!-- Make sure the top-level README.md file is included in the package -->
     <ItemGroup>
-        <None Include="../README.md" Pack="true" PackagePath="/"/>
+        <None Include="../../README.md" Pack="true" PackagePath="/"/>
     </ItemGroup>
 
     <ItemGroup>
