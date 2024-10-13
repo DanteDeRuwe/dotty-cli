@@ -1,8 +1,9 @@
 ﻿using CliWrap;
 using Cocona;
 using Cocona.Application;
+using Dotty.CLI;
 using Microsoft.Extensions.DependencyInjection;
-using Spectre.Console;
+using static Dotty.CLI.Output;
 
 var builder = CoconaApp.CreateBuilder();
 
@@ -22,7 +23,7 @@ app.AddSubCommand("introduce", group =>
         if (!name.Equals("Dante De Ruwe"))
         {
             Error("Speaker not found.");
-            return 1;
+            return;
         }
 
         Panel($"""
@@ -30,7 +31,6 @@ app.AddSubCommand("introduce", group =>
                software developer and public speaker passionate about .NET and fascinated 
                by software craftsmanship and architecture.
                """);
-        return 0;
     });
 });
 
@@ -55,23 +55,4 @@ app.AddSubCommand("present", group =>
     });
 });
 
-
 app.Run();
-return;
-
-void Panel(string message) => AnsiConsole.Write(new Panel(message) { Border = BoxBorder.Rounded });
-
-void Error(string message) => AnsiConsole.MarkupLine($":police_car_light: [bold red]Error:[/] {message}");
-
-T Select<T>(string title, params IEnumerable<T> choices) where T : notnull
-{
-    return AnsiConsole.Prompt(new SelectionPrompt<T>().Title(title).AddChoices(choices));
-}
-
-public class CustomMetadataProvider(ICoconaApplicationMetadataProvider inner) : ICoconaApplicationMetadataProvider
-{
-    public string GetProductName() => "dotty";
-    public string GetExecutableName() => "dotty";
-    public string GetVersion() => $"v{inner.GetVersion()}";
-    public string GetDescription() => inner.GetDescription();
-}
