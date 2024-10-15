@@ -2,16 +2,49 @@
 using Cocona;
 using Cocona.Application;
 using Dotty.CLI;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
 using static Dotty.CLI.Output;
 
 var builder = CoconaApp.CreateBuilder();
 
-builder.Services.AddSingleton<ICoconaApplicationMetadataProvider>(_ => new CustomMetadataProvider(new CoconaApplicationMetadataProvider()));
+builder.Services.AddSingleton<ICoconaApplicationMetadataProvider>(_ =>
+    new CustomMetadataProvider(new CoconaApplicationMetadataProvider()));
+
+var options = builder.Configuration.Get<DottyOptions>();
+builder.Services.Configure<DottyOptions>(builder.Configuration);
+
+var aiOptions = options.Groq; // or options.OpenApi
+
+#pragma warning disable SKEXP0010 //EXPERIMENTAL FEATURE!
+builder.Services.AddOpenAIChatCompletion(aiOptions.Model, endpoint: new Uri(aiOptions.Endpoint), apiKey: aiOptions.ApiKey);
+#pragma warning restore SKEXP0010
+
 
 var app = builder.Build();
 
 app.AddCommand("greet", ([Argument] string subject) => Panel($"Hello, {subject}!"));
+
+app.AddCommand("ask", async ([FromService] IChatCompletionService chat, [Option('q')] string question, [Option('c')] string? context = null) =>
+{
+    var history = new ChatHistory();
+    
+    if (!string.IsNullOrEmpty(context))
+    {
+        history.AddSystemMessage(context);
+    }
+    
+    history.AddUserMessage(question);
+    
+    await foreach (var response in chat.GetStreamingChatMessageContentsAsync(history))
+    {
+        WriteItalic(response);
+        await Task.Delay(50); // simulate typing
+    }
+});
 
 app.AddSubCommand("introduce", group =>
 {
@@ -56,3 +89,17 @@ app.AddSubCommand("present", group =>
 });
 
 app.Run();
+
+
+file record DottyOptions
+{
+    public AIServiceOptions OpenApi { get; init; }
+    public AIServiceOptions Groq { get; init; }
+}
+
+file record AIServiceOptions
+{
+    public required string ApiKey { get; init; }
+    public required string Endpoint { get; init; }
+    public required string Model { get; init; }
+}

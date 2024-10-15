@@ -12,4 +12,6 @@ public static class Output
 
     public static T Select<T>(string title, params IEnumerable<T> choices) where T : notnull =>
         AnsiConsole.Prompt(new SelectionPrompt<T>().Title(title).AddChoices(choices));
+    
+    public static void WriteItalic<T>(T value) => AnsiConsole.Markup($"[italic]{value}[/]");
 }
