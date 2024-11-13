@@ -1,3 +1,5 @@
+using System.Text;
+using Bogus;
 using CliWrap;
 using Cocona;
 using Cocona.Application;
@@ -6,8 +8,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
-using Spectre.Console;
 using UnitsNet;
 using static System.StringComparison;
 using static Dotty.CLI.Output;
@@ -20,10 +20,11 @@ builder.Services.AddSingleton<ICoconaApplicationMetadataProvider>(_ =>
 var options = builder.Configuration.Get<DottyOptions>();
 builder.Services.Configure<DottyOptions>(builder.Configuration);
 
-var aiOptions = options.Groq; // or options.OpenApi
+var aiOptions = options.Groq!; // or options.OpenApi
 
 #pragma warning disable SKEXP0010 //EXPERIMENTAL FEATURE!
-builder.Services.AddOpenAIChatCompletion(aiOptions.Model, endpoint: new Uri(aiOptions.Endpoint), apiKey: aiOptions.ApiKey);
+builder.Services.AddOpenAIChatCompletion(aiOptions.Model, endpoint: new Uri(aiOptions.Endpoint),
+    apiKey: aiOptions.ApiKey);
 #pragma warning restore SKEXP0010
 
 
@@ -31,17 +32,19 @@ var app = builder.Build();
 
 app.AddCommand("greet", ([Argument] string subject) => Panel($"Hello, {subject}!"));
 
-app.AddCommand("ask", async ([FromService] IChatCompletionService chat, [Option('q')] string question, [Option('c')] string? context = null) =>
+app.AddCommand("ask", async ([FromService] IChatCompletionService chat, 
+    [Option('q')] string question,
+    [Option('c')] string? context = null) =>
 {
     var history = new ChatHistory();
-    
+
     if (!string.IsNullOrEmpty(context))
     {
         history.AddSystemMessage(context);
     }
-    
+
     history.AddUserMessage(question);
-    
+
     await foreach (var response in chat.GetStreamingChatMessageContentsAsync(history))
     {
         WriteItalic(response);
@@ -92,40 +95,68 @@ app.AddSubCommand("present", group =>
 });
 
 
-app.AddCommand("convert", ([Argument] double value, [Argument] string unit, [Option] string? to) =>
+app.AddSubCommand("convert", group =>
 {
-    // get quantity from
-    if (!Quantity.TryFromUnitAbbreviation(value, unit, out var quantity))
+    group.AddCommand("units", ([Argument] double value, [Argument] string unit, [Option] string? to) =>
     {
-        var byName = Quantity.Infos.SelectMany(q => q.UnitInfos).FirstOrDefault(u =>
-            u.Name.Equals(unit, OrdinalIgnoreCase) || u.PluralName.Equals(unit, OrdinalIgnoreCase));
-
-        if (byName is null || !Quantity.TryFrom(value, byName.Value, out quantity))
+        // get quantity from
+        if (!Quantity.TryFromUnitAbbreviation(value, unit, out var quantity))
         {
-            Error($"{value} {unit} is not a valid input");
+            var byName = Quantity.Infos.SelectMany(q => q.UnitInfos).FirstOrDefault(u =>
+                u.Name.Equals(unit, OrdinalIgnoreCase) || u.PluralName.Equals(unit, OrdinalIgnoreCase));
+
+            if (byName is null || !Quantity.TryFrom(value, byName.Value, out quantity))
+            {
+                Error($"{value} {unit} is not a valid input");
+                return;
+            }
+        }
+
+        // Get unit to
+        to ??= Select("Select the unit to convert to...", quantity.QuantityInfo.UnitInfos.Select(u => u.Name));
+
+        var unitToInfo = quantity.QuantityInfo.UnitInfos.FirstOrDefault(
+            u => u.Name.Equals(to, OrdinalIgnoreCase)
+                 || u.PluralName.Equals(to, OrdinalIgnoreCase)
+                 || (UnitsNetSetup.Default.UnitParser.TryParse(to, quantity.QuantityInfo.UnitType, out var toEnum) &&
+                     u.Value.Equals(toEnum)));
+
+        if (unitToInfo is null)
+        {
+            Error($"{to} is not a valid unit for {quantity.QuantityInfo.Name}");
             return;
         }
-    }
 
-    // Get unit to
-    to ??= Select("Select the unit to convert to...", quantity.QuantityInfo.UnitInfos.Select(u => u.Name));
 
-    var unitToInfo = quantity.QuantityInfo.UnitInfos.FirstOrDefault(
-        u => u.Name.Equals(to, OrdinalIgnoreCase)
-             || u.PluralName.Equals(to, OrdinalIgnoreCase)
-             || (UnitsNetSetup.Default.UnitParser.TryParse(to, quantity.QuantityInfo.UnitType, out var toEnum) &&
-                 u.Value.Equals(toEnum)));
-    
-    if (unitToInfo is null)
+        // Convert & print
+        var convertedValue = quantity.ToUnit(unitToInfo.Value);
+        Panel($"{value} {quantity.Unit} is equal to {convertedValue.Value} {unitToInfo.PluralName}");
+    });
+
+    group.AddCommand("tobase64",
+        ([Argument] string input) => Panel(Convert.ToBase64String(Encoding.UTF8.GetBytes(input))));
+
+    group.AddCommand("frombase64",
+        ([Argument] string input) => Panel(Encoding.UTF8.GetString(Convert.FromBase64String(input))));
+});
+
+app.AddSubCommand("generate", group =>
+{
+    group.AddSubCommand("random", subgroup =>
     {
-        Error($"{to} is not a valid unit for {quantity.QuantityInfo.Name}");
-        return;
-    }
+        subgroup.AddCommand("guid", () => Panel(Guid.NewGuid().ToString()));
+        subgroup.AddCommand("number",
+            ([Option('m')] int min = 0, [Option('M')] int max = 100) => Panel(Random.Shared.Next(min, max).ToString()));
 
-    
-    // Convert & print
-    var convertedValue = quantity.ToUnit(unitToInfo.Value);
-    Panel($"{value} {quantity.Unit} is equal to {convertedValue.Value} {unitToInfo.PluralName}");
+        subgroup
+            .AddCommand("fromtemplate", ([Argument] string template) => Panel(new Faker().Parse(template)))
+            .WithDescription("""
+                             Can generate random data from a template using the Bogus library. 
+                             For example, `generate random fromtemplate '{{name.firstName(Male)}} {{name.lastName}}'`
+                             """);
+    });
+
+    group.AddCommand("timestamp", (string format = "o") => { Panel(DateTimeOffset.UtcNow.ToString(format)); });
 });
 
 app.Run();
@@ -133,11 +164,11 @@ app.Run();
 
 file record DottyOptions
 {
-    public AIServiceOptions OpenApi { get; init; }
-    public AIServiceOptions Groq { get; init; }
+    public AiServiceOptions? OpenApi { get; init; }
+    public AiServiceOptions? Groq { get; init; }
 }
 
-file record AIServiceOptions
+file record AiServiceOptions
 {
     public required string ApiKey { get; init; }
     public required string Endpoint { get; init; }
