@@ -1,4 +1,4 @@
-﻿using CliWrap;
+using CliWrap;
 using Cocona;
 using Cocona.Application;
 using Dotty.CLI;
@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Spectre.Console;
+using UnitsNet;
+using static System.StringComparison;
 using static Dotty.CLI.Output;
 
 var builder = CoconaApp.CreateBuilder();
@@ -86,6 +89,43 @@ app.AddSubCommand("present", group =>
             ])
             .ExecuteAsync();
     });
+});
+
+
+app.AddCommand("convert", ([Argument] double value, [Argument] string unit, [Option] string? to) =>
+{
+    // get quantity from
+    if (!Quantity.TryFromUnitAbbreviation(value, unit, out var quantity))
+    {
+        var byName = Quantity.Infos.SelectMany(q => q.UnitInfos).FirstOrDefault(u =>
+            u.Name.Equals(unit, OrdinalIgnoreCase) || u.PluralName.Equals(unit, OrdinalIgnoreCase));
+
+        if (byName is null || !Quantity.TryFrom(value, byName.Value, out quantity))
+        {
+            Error($"{value} {unit} is not a valid input");
+            return;
+        }
+    }
+
+    // Get unit to
+    to ??= Select("Select the unit to convert to...", quantity.QuantityInfo.UnitInfos.Select(u => u.Name));
+
+    var unitToInfo = quantity.QuantityInfo.UnitInfos.FirstOrDefault(
+        u => u.Name.Equals(to, OrdinalIgnoreCase)
+             || u.PluralName.Equals(to, OrdinalIgnoreCase)
+             || (UnitsNetSetup.Default.UnitParser.TryParse(to, quantity.QuantityInfo.UnitType, out var toEnum) &&
+                 u.Value.Equals(toEnum)));
+    
+    if (unitToInfo is null)
+    {
+        Error($"{to} is not a valid unit for {quantity.QuantityInfo.Name}");
+        return;
+    }
+
+    
+    // Convert & print
+    var convertedValue = quantity.ToUnit(unitToInfo.Value);
+    Panel($"{value} {quantity.Unit} is equal to {convertedValue.Value} {unitToInfo.PluralName}");
 });
 
 app.Run();
