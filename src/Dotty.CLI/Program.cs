@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Text;
 using Bogus;
-using CliWrap;
 using Cocona;
 using Cocona.Application;
 using Dotty.CLI;
