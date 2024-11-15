@@ -32,10 +32,15 @@ app.AddSubCommand("introduce", group =>
         }
 
         Panel($"""
-               This talk is presented to you by {name}, a technical consultant, 
-               software developer and public speaker passionate about .NET and fascinated 
-               by software craftsmanship and architecture.
+               This talk is presented to you by {name}.
+               
+               [gray]Technical Consultant | Software Developer | Public Speaker[/]
+               
+               Passionate about .NET and fascinated by software craftsmanship and architecture.
+               
+               🚀 [bold][cyan]dantederuwe.com[/][/]
                """);
+        
     });
     group.AddCommand("yourself", () =>
     {
@@ -122,7 +127,7 @@ app.AddSubCommand("generate", group =>
                              """);
     });
 
-    group.AddCommand("timestamp", (string format = "o") => { Panel(DateTimeOffset.UtcNow.ToString(format)); });
+    group.AddCommand("timestamp", (string format = "o") => Panel(DateTimeOffset.UtcNow.ToString(format)));
 });
 
 app.Run();
