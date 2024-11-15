@@ -28,7 +28,7 @@ jobs:
         run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV
 
       - name: Pack .NET tool
-        run: dotnet pack ./Dotty.CLI/Dotty.CLI.csproj --configuration Release -p:Version=${{ env.VERSION }} --output ./out --no-restore
+        run: dotnet pack ./src/Dotty.CLI/Dotty.CLI.csproj --configuration Release -p:Version=${{ env.VERSION }} --output ./out --no-restore
 
       - name: Publish to NuGet
         run: dotnet nuget push ./out/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
