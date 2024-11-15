@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using Bogus;
 using CliWrap;
@@ -50,22 +51,13 @@ app.AddSubCommand("introduce", group =>
 
 app.AddSubCommand("present", group =>
 {
-    group.AddCommand("slides", async () =>
+    group.AddCommand("slides", () =>
     {
-        //open google slides and put in slideshow mode
-        var edgePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86),
-            "Microsoft", "Edge", "Application", "msedge.exe"
-        );
-
-        await Cli
-            .Wrap(edgePath)
-            .WithArguments([
-                "https://docs.google.com/presentation/d/1WABgifl2J70RuZjVP8MJkAf4k5TWAohhuNUtBViE5Fs/present",
-                "--new-window",
-                "--start-fullscreen"
-            ])
-            .ExecuteAsync();
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = "https://docs.google.com/presentation/d/1WABgifl2J70RuZjVP8MJkAf4k5TWAohhuNUtBViE5Fs/present",
+            UseShellExecute = true
+        });
     });
 });
 
