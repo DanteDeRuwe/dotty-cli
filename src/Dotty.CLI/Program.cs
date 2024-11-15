@@ -71,6 +71,15 @@ app.AddSubCommand("introduce", group =>
                by software craftsmanship and architecture.
                """);
     });
+    group.AddCommand("yourself", () =>
+    {
+        Panel("""
+              Hi, I'm Dotty, a CLI tool written in C# with dotnet. 
+              I'm an assistant here to help you with various tasks!
+
+              PS: My name is a play on words: Dotnet + Clippy. Remember Clippy? 
+              """);
+    });
 });
 
 app.AddSubCommand("present", group =>
