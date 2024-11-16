@@ -1,6 +1,6 @@
 using Spectre.Console;
 
-namespace Dotty.CLI;
+namespace Dotty.CLI.Helpers;
 
 public static class Output
 {

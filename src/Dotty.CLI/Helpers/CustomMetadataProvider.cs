@@ -1,6 +1,6 @@
 using Cocona.Application;
 
-namespace Dotty.CLI;
+namespace Dotty.CLI.Helpers;
 
 public class CustomMetadataProvider(ICoconaApplicationMetadataProvider inner) : ICoconaApplicationMetadataProvider
 {
