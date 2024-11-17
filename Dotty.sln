@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_solution", "_solution", "{
 		.gitignore = .gitignore
 		README.md = README.md
 		.github\workflows\release.yml = .github\workflows\release.yml
+		.dockerignore = .dockerignore
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{AE5D96E8-180C-4E9A-99D3-B709B0517EAF}"

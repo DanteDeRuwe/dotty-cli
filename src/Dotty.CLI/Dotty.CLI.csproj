@@ -6,6 +6,7 @@
         <PackAsTool>true</PackAsTool>
         <ToolCommandName>dotty</ToolCommandName>
         <AssemblyName>Dotty</AssemblyName>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <!-- Versioning -->
@@ -47,6 +48,12 @@
         <PackageReference Include="Spectre.Console" Version="0.49.1"/>
         <PackageReference Include="System.Text.Json" Version="9.0.0" />
         <PackageReference Include="UnitsNet" Version="5.60.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
