@@ -37,7 +37,7 @@ public class IntroduceCommand : ICommandDefinition
 
                Passionate about .NET and fascinated by software craftsmanship and architecture.
 
-               🚀 [bold][cyan]dantederuwe.com[/][/]
+               :rocket: [bold][cyan][link=https://dantederuwe.com]dantederuwe.com[/][/][/]
                """);
     }
 }

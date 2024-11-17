@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
@@ -12,6 +12,7 @@
     <PropertyGroup>
         <Version>$(Version)</Version>
         <PackageVersion>$(Version)</PackageVersion>
+        <AssemblyVersion>$(Version)</AssemblyVersion>
         <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     </PropertyGroup>
 
@@ -19,7 +20,7 @@
     <PropertyGroup>
         <PackageId>dotty</PackageId>
         <Authors>Dante De Ruwe</Authors>
-        <Description>A proof-of-concept tool for my talk about "Crafting modern CLI tools using .NET"</Description>
+        <Description>A proof-of-concept tool for Dante De Ruwe's talk about "Crafting modern CLI tools using .NET"</Description>
         <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <Copyright>Copyright 2024 (c) Dante De Ruwe. All rights reserved.</Copyright>
         <PackageTags>dotnet cli tool dotnet-tool</PackageTags>

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = CoconaApp.CreateBuilder();
 
-builder.Services.AddSingleton<ICoconaApplicationMetadataProvider>(new CustomMetadataProvider(new CoconaApplicationMetadataProvider()));
+builder.Services.AddSingleton<ICoconaApplicationMetadataProvider, CustomMetadataProvider>();
 
 var app = builder.Build();
 
