@@ -5,7 +5,7 @@ namespace Dotty.CLI.Helpers;
 
 internal static class Output
 {
-    private static IAnsiConsole ErrorConsole => AnsiConsole.Create(new AnsiConsoleSettings
+    private static IAnsiConsole ErrorConsole { get; } = AnsiConsole.Create(new AnsiConsoleSettings
     {
         Ansi = AnsiSupport.Detect,
         ColorSystem = ColorSystemSupport.Detect,
