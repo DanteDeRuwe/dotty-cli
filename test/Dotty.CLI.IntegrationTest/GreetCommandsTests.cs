@@ -11,6 +11,7 @@ public class GreetCommandsTests(DockerContainerFixture fixture) : IClassFixture<
         var container = fixture.GetContainerForCommand("greet tests");
         await container.StartAsync();
         var (stdout, stderr) = await container.GetLogsAsync();
+        stderr.Should().BeEmpty();
         stdout.Should().Contain("Hello, tests!");
     }
 }
