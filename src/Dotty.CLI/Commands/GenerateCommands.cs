@@ -23,7 +23,8 @@ public class GenerateCommands : ICommandDefinition
                                          Can generate random data from a template using the Bogus library. 
                                          For example, `generate random fromtemplate '{{name.firstName(Male)}} {{name.lastName}}'`
                                          """);
-                });
+                })
+                .WithDescription("Contains commands to generate certain random data");
 
                 group.AddCommand("timestamp", (string format = "o") => Panel(DateTimeOffset.UtcNow.ToString(format)))
                     .WithDescription("Generates a timestamp for the current datetime with an optional format string");
