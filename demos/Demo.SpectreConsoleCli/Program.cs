@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Live;
+using BasicDemo;
 using Spectre.Console.Cli;
 
 var app = new CommandApp();
@@ -15,7 +15,7 @@ app.Configure(config =>
 
 return app.Run(args);
 
-namespace Live
+namespace BasicDemo
 {
     public class GenerateGuidCommand : Command
     {
