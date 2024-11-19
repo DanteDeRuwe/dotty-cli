@@ -29,13 +29,13 @@ public class WeatherCommands : ICommandDefinition
             .Where(g => g.Key == 12)
             .SelectMany(g => g);
 
-        var table = new Table().AddColumns("Time", "Temperature", "Humidity").Centered();
+        var table = new Table().AddColumns("Date", "Temperature", "Humidity").Centered();
         AnsiConsole.Live(table).Start(ctx =>
         {
             foreach (var w in dailyWeatherAtNoon)
             {
                 table.AddRow(new TableRow([
-                    new Markup($"[bold]{w.Time:dd MMMM}[/]"),
+                    new Markup($"[bold]{w.Time:ddd dd MMM}[/]"),
                     new Text($"{w.Temperature:F1}°C"),
                     new Text($"{w.Humidity:F1}%")
                 ]));
