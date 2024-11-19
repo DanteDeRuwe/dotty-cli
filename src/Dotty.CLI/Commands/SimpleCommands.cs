@@ -8,7 +8,8 @@ public class SimpleCommands : ICommandDefinition
 {
     public void Register(ICoconaAppBuilder app)
     {
-        app.AddCommand("greet", ([Argument] string subject) => Panel($"Hello, {subject}!"));
+        app.AddCommand("greet", ([Argument] string subject) => Panel($"Hello, {subject}!"))
+            .WithDescription("Greets any subject");
 
         app.AddCommand(([FromService] ICoconaApplicationMetadataProvider metadataProvider, [FromService] ICoconaHelpMessageBuilder helpProvider) =>
         {

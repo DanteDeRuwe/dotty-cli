@@ -9,7 +9,8 @@ public class WeatherCommands : ICommandDefinition
 {
     public void Register(ICoconaAppBuilder app)
     {
-        app.AddCommand("weather", ExecuteWeatherCommand);
+        app.AddCommand("weather", ExecuteWeatherCommand)
+            .WithDescription("Gets the weather for a specific city");
     }
 
     private static async Task ExecuteWeatherCommand([FromService] IWeatherService weatherService, [Argument] string city)

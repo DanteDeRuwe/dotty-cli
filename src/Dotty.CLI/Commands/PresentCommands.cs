@@ -16,6 +16,7 @@ public class PresentCommands : ICommandDefinition
                     UseShellExecute = true
                 });
             });
-        });
+        })
+        .WithDescription("Opens the presentation slides for the talk");
     }
 }

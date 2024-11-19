@@ -10,10 +10,14 @@ public class ConvertCommands : ICommandDefinition
     {
         app.AddSubCommand("convert", group =>
         {
-            group.AddCommand("units", ConvertUnits);
-            group.AddCommand("tobase64", ([Argument] string input) => Panel(Convert.ToBase64String(Encoding.UTF8.GetBytes(input))));
-            group.AddCommand("frombase64", ([Argument] string input) => Panel(Encoding.UTF8.GetString(Convert.FromBase64String(input))));
-        });
+            group.AddCommand("units", ConvertUnits)
+                .WithDescription("Converts a value from one unit of measurement to another");
+            group.AddCommand("tobase64", ([Argument] string input) => Panel(Convert.ToBase64String(Encoding.UTF8.GetBytes(input))))
+                .WithDescription("Converts a string to a base64 encoded string");
+            group.AddCommand("frombase64", ([Argument] string input) => Panel(Encoding.UTF8.GetString(Convert.FromBase64String(input))))
+                .WithDescription("Converts a base64 encoded string to a regular string");
+        })
+        .WithDescription("Contains commands to convert values");
     }
 
 

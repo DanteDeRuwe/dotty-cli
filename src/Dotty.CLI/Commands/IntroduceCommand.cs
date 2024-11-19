@@ -6,18 +6,24 @@ public class IntroduceCommand : ICommandDefinition
     {
         app.AddSubCommand("introduce", group =>
         {
-            group.AddCommand("talk", () => Panel("Welcome to this talk on crafting modern CLI tools using .NET"));
-            group.AddCommand("speaker", IntroduceSpeaker);
-            group.AddCommand("yourself", () =>
-            {
-                Panel("""
-                      Hi, I'm Dotty, a CLI tool written in C# with dotnet. 
-                      I'm an assistant here to help you with various tasks!
+            group.AddCommand("talk", () => Panel("Welcome to this talk on crafting modern CLI tools using .NET"))
+                .WithDescription("Introduces the talk");
 
-                      PS: My name is a play on words: Dotnet + Clippy. Remember Clippy? 
-                      """);
-            });
-        });
+            group.AddCommand("speaker", IntroduceSpeaker)
+                .WithDescription("Introduces the speaker");
+
+            group.AddCommand("yourself", () =>
+                {
+                    Panel("""
+                          Hi, I'm Dotty, a CLI tool written in C# with dotnet. 
+                          I'm an assistant here to help you with various tasks!
+
+                          PS: My name is a play on words: Dotnet + Clippy. Remember Clippy? 
+                          """);
+                })
+                .WithDescription("Introduces Dotty");
+        })
+        .WithDescription("Contains commands to introduce various elements");
     }
 
     private static void IntroduceSpeaker([Option('n')] string? name = null)
