@@ -4,12 +4,14 @@ using Microsoft.Extensions.Logging;
 
 var builder = Host.CreateDefaultBuilder(args);
 
-builder.ConfigureLogging(logging => { logging.AddFilter("Microsoft", LogLevel.Warning); });
+builder.ConfigureLogging(logging =>
+{
+    logging.AddFilter("Microsoft", LogLevel.Warning);
+});
 
 builder.ConfigureServices(services =>
 {
-    services.AddKeyedSingleton("args", args);
-    services.AddHostedService<ConsoleHostedService>();
+    services.AddHostedService(sp => new ConsoleHostedService(args, sp.GetRequiredService<IHostApplicationLifetime>()));
 });
 
 var app = builder.Build();
@@ -18,10 +20,7 @@ app.Run();
 
 // ---
 
-file class ConsoleHostedService(
-    [FromKeyedServices("args")] string[] args,
-    IHostApplicationLifetime appLifetime)
-    : IHostedService
+file class ConsoleHostedService(string[] args, IHostApplicationLifetime appLifetime) : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
     {
@@ -31,6 +30,7 @@ file class ConsoleHostedService(
             Environment.ExitCode = exitCode;
         });
 
+        appLifetime.StopApplication();
         return Task.CompletedTask;
     }
 
@@ -49,20 +49,18 @@ file class ConsoleHostedService(
             case ["generate", "guid"]:
             {
                 // Generate a GUID
-                Guid guid = Guid.NewGuid();
-                Console.WriteLine($"Generated GUID: {guid}");
+                Console.WriteLine($"Generated GUID: {Guid.NewGuid()}");
                 return 0;
             }
             case ["generate", "number", .. var options]:
             {
                 int from = 0, to = 100;
-                bool hasFrom = false, hasTo = false;
 
                 // Parse '--from' argument
                 if (options.Contains("--from"))
                 {
                     var index = Array.IndexOf(options, "--from");
-                    hasFrom = index + 1 < options.Length && int.TryParse(options[index + 1], out from);
+                    var hasFrom = index + 1 < options.Length && int.TryParse(options[index + 1], out from);
                     if (!hasFrom)
                     {
                         Console.WriteLine("Invalid value for --from.");
@@ -74,7 +72,7 @@ file class ConsoleHostedService(
                 if (options.Contains("--to"))
                 {
                     var index = Array.IndexOf(options, "--to");
-                    hasTo = index + 1 < options.Length && int.TryParse(options[index + 1], out to);
+                    var hasTo = index + 1 < options.Length && int.TryParse(options[index + 1], out to);
                     if (!hasTo)
                     {
                         Console.WriteLine("Invalid value for --to.");
@@ -83,15 +81,14 @@ file class ConsoleHostedService(
                 }
 
                 // Validate if 'from' is greater than 'to'
-                if (hasFrom && hasTo && from > to)
+                if (from > to)
                 {
                     Console.WriteLine("The 'from' value cannot be greater than the 'to' value.");
                     return 1;
                 }
 
                 // Generate a random number in the specified range
-                Random rand = new Random();
-                var number = rand.Next(from, to + 1); // The upper bound is exclusive, so add +1 to include 'to'
+                var number = Random.Shared.Next(from, to + 1); // The upper bound is exclusive, so add +1 to include 'to'
                 Console.WriteLine($"Generated number: {number}");
                 return 0;
             }
