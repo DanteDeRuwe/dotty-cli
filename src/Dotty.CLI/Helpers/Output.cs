@@ -16,7 +16,7 @@ internal static class Output
         AnsiConsole.Write(new Panel(renderable) { Border = BoxBorder.Rounded, Expand = expand });
 
     public static void Panel(string message, bool expand = true) =>
-        Panel(new Text(message), expand);
+        Panel(new Markup(message), expand);
 
     public static void Error(string message) =>
         ErrorConsole.MarkupLine($":police_car_light: [bold red]Error:[/] {message}");
